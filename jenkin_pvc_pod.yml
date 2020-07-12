@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkin
+  labels:
+    app: jenkin
+spec:
+  selector:
+    matchLabels:
+      app: jenkin
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: jenkin
+        tier: frontend
+    spec:
+        containers:
+        - name: jenkins-con
+          image: jenkin:v3
+          ports:
+          - containerPort: 8080
+            name: jenkin-service
+          volumeMounts:
+          - name: jenkin-storage
+            mountPath: /var/lib/jenkins/workspace
+        volumes:
+        - name: jenkin-storage
+          persistentVolumeClaim:
+            claimName: jenkin-pvc 
+ 
